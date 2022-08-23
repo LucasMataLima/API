@@ -1,0 +1,5 @@
+E:\Repos\Coder\API\API2\obj\Debug\net6.0\Lucas_Mata.csproj.AssemblyReference.cache
+E:\Repos\Coder\API\API2\obj\Debug\net6.0\Lucas_Mata.GeneratedMSBuildEditorConfig.editorconfig
+E:\Repos\Coder\API\API2\obj\Debug\net6.0\Lucas_Mata.AssemblyInfoInputs.cache
+E:\Repos\Coder\API\API2\obj\Debug\net6.0\Lucas_Mata.AssemblyInfo.cs
+E:\Repos\Coder\API\API2\obj\Debug\net6.0\Lucas_Mata.csproj.CoreCompileInputs.cache
