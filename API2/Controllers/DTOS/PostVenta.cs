@@ -2,9 +2,8 @@
 {
     public class PostVenta
     {
-        public int Id { get; set; }
-        public string? Comentarios { get; set; }
-        public int IdUsuario { get; set; }
+        public Venta venta { get; set; }
+        public List<Producto> producto { get; set; }    
 
     }
 }

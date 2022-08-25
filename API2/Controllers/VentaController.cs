@@ -9,9 +9,10 @@ namespace API2.Controllers
     public class VentaController : ControllerBase
     {
         [HttpPost]
-        public bool NuevaVenta([FromBody] List<Producto> producto, Venta venta)
+        public bool NuevaVenta([FromBody] PostVenta Venta)
         {
-            return VentasHandler.CreateNewSale( producto, venta);
+            return VentasHandler.CreateNewSale(Venta.producto, Venta.venta);
         }
     }
 }
+    

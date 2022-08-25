@@ -19,6 +19,7 @@ namespace API2.DataBase
         }
         public static bool CreateNewSale(List<Producto> producto, Venta venta)
         {
+            //Creo la venta
             bool result = false;
             string queryInsert = "INSERT INTO Venta (Comentarios, IdUsuario) " +
                                     "VALUES (@comentarios, @IdUsuario)";
@@ -27,15 +28,16 @@ namespace API2.DataBase
             List<SqlParameter> ParametrosVentas = new List<SqlParameter>();
             ParametrosVentas.Add(comentarios);
             ParametrosVentas.Add(IdUsuario);
-
+            //inserto la venta
             result = DBHandler.InsertUpdate(queryInsert, ParametrosVentas);
-
+            //Selecciono el último Id
             string query = "SELECT TOP (1) [Id] FROM [Venta] ORDER BY Id Desc";
             var idVentas = DBHandler.GetId(query);
             foreach (var prod in producto)
             {
+                // itero la lista de productos y cargo productos vendidos
                 string queryInsertProductoVendido = "INSERT INTO ProductoVendido (Stock, IdProducto, IdVenta) " +
-                                       "VALUES (@Stock, @IdProductom, @IdVenta)";
+                                                     "VALUES (@Stock, @IdProducto, @IdVenta)";
                 SqlParameter Stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock};
                 SqlParameter IdProducto = new SqlParameter("IdProducto", System.Data.SqlDbType.Int) { Value = prod.Id};
                 SqlParameter IdVenta = new SqlParameter("IdVenta", System.Data.SqlDbType.Int) { Value = idVentas };
@@ -43,9 +45,19 @@ namespace API2.DataBase
                 ParametrosProductosVendidos.Add(Stock);
                 ParametrosProductosVendidos.Add(IdProducto);
                 ParametrosProductosVendidos.Add(IdVenta);
-                var Pv = DBHandler.InsertUpdate(queryInsertProductoVendido, ParametrosProductosVendidos);
+                //Si el insert falla es false
+                result = DBHandler.InsertUpdate(queryInsertProductoVendido, ParametrosProductosVendidos);
 
-                // ---- FALTA DESCONTAR EL STOCK DE TABA PRODUCTOS ---- //
+                //Comienza el update de la Tabla Producto
+                string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock- @Stock) WHERE ID = @ID";
+
+                List<SqlParameter> ParametersProductoS = new List<SqlParameter>();
+                SqlParameter StockaDescontar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock };
+                SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = prod.Id };
+                ParametersProductoS.Add(StockaDescontar);
+                ParametersProductoS.Add(IdProductoCorresponde);
+
+                result = DBHandler.InsertUpdate(QueryProductos, ParametersProductoS);
             }
                 
             return result;
