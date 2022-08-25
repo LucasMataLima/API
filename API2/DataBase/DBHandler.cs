@@ -46,9 +46,7 @@ namespace API2.DataBase
             return result;
         }
 
-        public static bool Insert(string queryInsert, SqlParameter sqlParameter1,
-                                    SqlParameter sqlParameter2, SqlParameter sqlParameter3,
-                                     SqlParameter sqlParameter4, SqlParameter sqlParameter5)
+        public static bool InsertUpdate(string queryInsert, List<SqlParameter> sqlParameter)
         {
             bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
@@ -56,11 +54,11 @@ namespace API2.DataBase
                 sqlConnection.Open();
                 using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
                 {
-                    sqlCommand.Parameters.Add(sqlParameter1);
-                    sqlCommand.Parameters.Add(sqlParameter2);
-                    sqlCommand.Parameters.Add(sqlParameter3);
-                    sqlCommand.Parameters.Add(sqlParameter4);
-                    sqlCommand.Parameters.Add(sqlParameter5);
+                    foreach (var item in sqlParameter)
+                    {
+                        sqlCommand.Parameters.Add(item);
+
+                    }
 
                     int numberOfRows = sqlCommand.ExecuteNonQuery();
                     if (numberOfRows > 0)
@@ -73,34 +71,28 @@ namespace API2.DataBase
             return result;
         }
 
-        public static bool Update(string queryUpdate, SqlParameter sqlParameter1,SqlParameter sqlParameter2, 
-                                  SqlParameter sqlParameter3,SqlParameter sqlParameter4, SqlParameter sqlParameter5, 
-                                  SqlParameter sqlParameter6)
+        public static int GetId(string query)
         {
-            bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryUpdate, sqlConnection))
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                 {
-                    sqlCommand.Parameters.Add(sqlParameter1);
-                    sqlCommand.Parameters.Add(sqlParameter2);
-                    sqlCommand.Parameters.Add(sqlParameter3);
-                    sqlCommand.Parameters.Add(sqlParameter4);
-                    sqlCommand.Parameters.Add(sqlParameter5);
-                    sqlCommand.Parameters.Add(sqlParameter6);
-
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-
-                    if (numberOfRows > 0)
+                    var Id = 0;
+                    sqlConnection.Open();   
+                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                     {
-                        result = true;
+                        if (dataReader.HasRows)
+                        {
+                            while (dataReader.Read())
+                            {
+                                Id = Convert.ToInt32(dataReader["ID"]);
+                            }
+                        }
                     }
+                    sqlConnection.Close();
+                    return Id;
                 }
-                sqlConnection.Close();
-            }
-            return result;
+            }               
         }
     }
 }

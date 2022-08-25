@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using API2.Mappers;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace API2.DataBase
@@ -21,7 +22,7 @@ namespace API2.DataBase
                         {
                             while (dataReader.Read())
                             {
-                                var usuario = new Usuario();
+                                Usuario usuario = new Usuario();
                                 usuario.Id = Convert.ToInt32(dataReader["ID"]);
                                 usuario.Nombre = dataReader["Nombre"].ToString();
                                 usuario.Apellido = dataReader["Apellido"].ToString();
@@ -48,13 +49,20 @@ namespace API2.DataBase
         {
             string queryInsert = "INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) " +
                                  "VALUES (@nombre, @apellido, @nombreUsuario, @contraseña, @mail)";
+
             var nombre = new SqlParameter("Nombre", System.Data.SqlDbType.VarChar) { Value = usuario.Nombre };
             var apellido = new SqlParameter("Apellido", System.Data.SqlDbType.VarChar) { Value = usuario.Apellido };
             var nombreUsuario = new SqlParameter("NombreUsuario", System.Data.SqlDbType.VarChar) { Value = usuario.NombreUsuario };
             var contraseña = new SqlParameter("Contraseña", System.Data.SqlDbType.VarChar) { Value = usuario.Contraseña };
             var mail = new SqlParameter("Mail", System.Data.SqlDbType.VarChar) { Value = usuario.Mail };
+            List<SqlParameter> ParametrosUs = new List<SqlParameter>();
+            ParametrosUs.Add(nombre);
+            ParametrosUs.Add(apellido);
+            ParametrosUs.Add(nombreUsuario);
+            ParametrosUs.Add(contraseña);
+            ParametrosUs.Add(mail);
 
-            var U = DBHandler.Insert(queryInsert, nombre,apellido,nombreUsuario,contraseña,mail);
+            var U = DBHandler.InsertUpdate(queryInsert, ParametrosUs);
             return U;
         }
         public static bool UpdateUser(Usuario usuario)
@@ -63,16 +71,22 @@ namespace API2.DataBase
                                  "SET Nombre = @nombre, Apellido = @apellido, " +
                                  "NombreUsuario = @nombreUsuario, Contraseña = @contraseña, Mail = @mail " +
                                  "WHERE Id = @id ";
-
+            List<SqlParameter> ParametrosUs = new List<SqlParameter>();
             var nombre = new SqlParameter("nombre", System.Data.SqlDbType.VarChar) { Value = usuario.Nombre };
             var apellido = new SqlParameter("apellido", System.Data.SqlDbType.VarChar) { Value = usuario.Apellido };
             var nombreUsuario = new SqlParameter("nombreUsuario", System.Data.SqlDbType.VarChar) { Value = usuario.NombreUsuario };
             var contraseña = new SqlParameter("contraseña", System.Data.SqlDbType.VarChar) { Value = usuario.Contraseña };
             var mail = new SqlParameter("mail", System.Data.SqlDbType.VarChar) { Value = usuario.Mail };
             var id = new SqlParameter("id", System.Data.SqlDbType.BigInt) { Value = usuario.Id };
-            var U = DBHandler.Update(queryUpdate, nombre, apellido, nombreUsuario, contraseña, mail, id);
-            return U;
+            ParametrosUs.Add(nombre);
+            ParametrosUs.Add(apellido);
+            ParametrosUs.Add(nombreUsuario);
+            ParametrosUs.Add(contraseña);
+            ParametrosUs.Add(mail);
+            ParametrosUs.Add(id);
 
+            var U = DBHandler.InsertUpdate(queryUpdate, ParametrosUs);
+            return U;
         }
     }
 }

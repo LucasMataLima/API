@@ -17,28 +17,37 @@ namespace API2.DataBase
             var V = Execute(query, sqlParamenter, ventasMapper);
             return V;
         }
-        public static bool CreateNewSale(Venta venta)
+        public static bool CreateNewSale(List<Producto> producto, Venta venta)
         {
             bool result = false;
-            using (SqlConnection sqlConnection = new SqlConnection(DBHandler.ConnectionString))
+            string queryInsert = "INSERT INTO Venta (Comentarios, IdUsuario) " +
+                                    "VALUES (@comentarios, @IdUsuario)";
+            SqlParameter comentarios = new SqlParameter("Comentarios", System.Data.SqlDbType.VarChar) { Value = venta.Comentarios };
+            SqlParameter IdUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.VarChar) { Value = venta.IdUsuario };
+            List<SqlParameter> ParametrosVentas = new List<SqlParameter>();
+            ParametrosVentas.Add(comentarios);
+            ParametrosVentas.Add(IdUsuario);
+
+            result = DBHandler.InsertUpdate(queryInsert, ParametrosVentas);
+
+            string query = "SELECT TOP (1) [Id] FROM [Venta] ORDER BY Id Desc";
+            var idVentas = DBHandler.GetId(query);
+            foreach (var prod in producto)
             {
-                string queryInsert = "INSERT INTO Venta (Comentarios) " +
-                    "VALUES (@comentarios)";
-                SqlParameter comentarios = new SqlParameter("Comentarios", System.Data.SqlDbType.VarChar) { Value = venta.Comentarios };
+                string queryInsertProductoVendido = "INSERT INTO ProductoVendido (Stock, IdProducto, IdVenta) " +
+                                       "VALUES (@Stock, @IdProductom, @IdVenta)";
+                SqlParameter Stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock};
+                SqlParameter IdProducto = new SqlParameter("IdProducto", System.Data.SqlDbType.Int) { Value = prod.Id};
+                SqlParameter IdVenta = new SqlParameter("IdVenta", System.Data.SqlDbType.Int) { Value = idVentas };
+                List<SqlParameter> ParametrosProductosVendidos = new List<SqlParameter>();
+                ParametrosProductosVendidos.Add(Stock);
+                ParametrosProductosVendidos.Add(IdProducto);
+                ParametrosProductosVendidos.Add(IdVenta);
+                var Pv = DBHandler.InsertUpdate(queryInsertProductoVendido, ParametrosProductosVendidos);
 
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
-                {
-                    sqlCommand.Parameters.Add(comentarios);
-
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
-                    {
-                        result = true;
-                    }
-                }
-                sqlConnection.Close();
+                // ---- FALTA DESCONTAR EL STOCK DE TABA PRODUCTOS ---- //
             }
+                
             return result;
         }
     }
