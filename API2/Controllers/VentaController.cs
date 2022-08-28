@@ -13,6 +13,17 @@ namespace API2.Controllers
         {
             return VentasHandler.CreateNewSale(Venta.producto, Venta.venta);
         }
+
+        [HttpGet]
+        public List<Venta> GetVentas(int IdUsuario)
+        {
+            return VentasHandler.GetVentas(IdUsuario);
+        }
+
+        [HttpDelete]
+        public bool DeleteVenta([FromBody] Venta venta)
+        {
+            return VentasHandler.EliminarVenta(venta);
+        }
     }
 }
-    

@@ -2,8 +2,8 @@
 {
     public class PostVenta
     {
-        public Venta venta { get; set; }
-        public List<Producto> producto { get; set; }    
+        public Venta? venta { get; set; }
+        public List<Producto>? producto { get; set; }    
 
     }
 }

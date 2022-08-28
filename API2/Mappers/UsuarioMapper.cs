@@ -11,17 +11,22 @@ namespace API2.Mappers
             {
                 while (dataReader.Read())
                 {
-                    var usuario = new Usuario();
-                    usuario.Id = Convert.ToInt32(dataReader["ID"]);
-                    usuario.Nombre = dataReader["Nombre"].ToString();
-                    usuario.Apellido = dataReader["Apellido"].ToString();
-                    usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
-                    usuario.Contraseña = dataReader["Contraseña"].ToString();
-                    usuario.Mail = dataReader["Mail"].ToString();
-                    usuarios.Add(usuario);
+                    usuarios.Add(CargarUsuario(dataReader));
                 }
             }
             return usuarios;
+        }
+
+        public Usuario CargarUsuario(SqlDataReader dataReader)
+        {
+            var usuario = new Usuario();
+            usuario.Id = Convert.ToInt32(dataReader["ID"]);
+            usuario.Nombre = dataReader["Nombre"].ToString();
+            usuario.Apellido = dataReader["Apellido"].ToString();
+            usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
+            usuario.Contraseña = dataReader["Contraseña"].ToString();
+            usuario.Mail = dataReader["Mail"].ToString();
+            return usuario;
         }
     }
 }

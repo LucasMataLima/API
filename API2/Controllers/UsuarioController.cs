@@ -10,9 +10,9 @@ namespace API2.Controllers
     public class UsuarioController : ControllerBase
     {
         [HttpGet(Name = "GetUsuarios")]
-        public List<Usuario> GetUsuarios()
+        public Usuario GetUsuarios(string UserName)
         {
-            return UsuarioHandler.GetUsuario();
+            return UsuarioHandler.GetUsuario(UserName);
         }
 
         [HttpDelete]

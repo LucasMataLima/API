@@ -55,23 +55,20 @@ namespace API2.DataBase
             string queryInsert = "INSERT INTO Producto (Descripciones, Costo, PrecioVenta, Stock, IdUsuario) " +
                     "VALUES (@descripciones, @costo, @precioVenta, @stock, @idUsuario)";
 
-            List<SqlParameter> productos = new List<SqlParameter>();
             var descripciones = new SqlParameter("Descripciones", System.Data.SqlDbType.VarChar) { Value = producto.Descripciones };
-            productos.Add(descripciones);
-            
             var costo = new SqlParameter("Costo", System.Data.SqlDbType.Decimal) { Value = producto.Costo };
-            productos.Add(costo);
-            
             var precioVenta = new SqlParameter("PrecioVenta", System.Data.SqlDbType.Decimal) { Value = producto.PrecioVenta };
-            productos.Add(precioVenta);
-            
             var stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
-            productos.Add(stock);
-            
             var idUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
-            productos.Add(idUsuario);
+            SqlParameter[] ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario };
+            //List<SqlParameter> productos = new List<SqlParameter>();
+            //productos.Add(descripciones);
+            //productos.Add(costo);
+            //productos.Add(precioVenta);         
+            //productos.Add(stock);
+            //productos.Add(idUsuario);
 
-            var result = DBHandler.InsertUpdate(queryInsert, productos);
+            var result = DBHandler.InsertUpdate(queryInsert, ProductosParammeters);
 
             return result;
         }
@@ -81,20 +78,21 @@ namespace API2.DataBase
                                  "SET Descripciones = @descripciones, Costo = @costo, PrecioVenta = @precioVenta, Stock = @stock, IdUsuario = @idUsuario " +
                                  "WHERE Id = @id ";
 
-            List<SqlParameter> productos = new List<SqlParameter>();
+            //List<SqlParameter> productos = new List<SqlParameter>();
             var descripciones = new SqlParameter("descripciones", System.Data.SqlDbType.VarChar) { Value = producto.Descripciones };
             var costo = new SqlParameter("costo", System.Data.SqlDbType.Decimal) { Value = producto.Costo };
             var precioVenta = new SqlParameter("precioVenta", System.Data.SqlDbType.Decimal) { Value = producto.PrecioVenta };
             var stock = new SqlParameter("stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
             var idUsuario = new SqlParameter("idUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
             var id = new SqlParameter("id", System.Data.SqlDbType.BigInt) { Value = producto.Id };
-            productos.Add(descripciones);
-            productos.Add(costo);
-            productos.Add(precioVenta);
-            productos.Add(stock);
-            productos.Add(idUsuario);
-            productos.Add(id);
-            var P = DBHandler.InsertUpdate(queryUpdate, productos);
+            SqlParameter[] ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario,id };
+            //productos.Add(descripciones);
+            //productos.Add(costo);
+            //productos.Add(precioVenta);
+            //productos.Add(stock);
+            //productos.Add(idUsuario);
+            //productos.Add(id);
+            var P = DBHandler.InsertUpdate(queryUpdate, ProductosParammeters);
             return P;
         }
     }

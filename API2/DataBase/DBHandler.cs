@@ -46,7 +46,7 @@ namespace API2.DataBase
             return result;
         }
 
-        public static bool InsertUpdate(string queryInsert, List<SqlParameter> sqlParameter)
+        public static bool InsertUpdate(string queryInsert, SqlParameter[] sqlParameter)
         {
             bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
@@ -54,11 +54,11 @@ namespace API2.DataBase
                 sqlConnection.Open();
                 using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
                 {
-                    foreach (var item in sqlParameter)
-                    {
-                        sqlCommand.Parameters.Add(item);
+                    //foreach (var item in sqlParameter)
+                    //{
+                    sqlCommand.Parameters.AddRange(sqlParameter);
 
-                    }
+                    //}
 
                     int numberOfRows = sqlCommand.ExecuteNonQuery();
                     if (numberOfRows > 0)
@@ -94,5 +94,30 @@ namespace API2.DataBase
                 }
             }               
         }
+
+        //public static SqlDataReader Select(string query, SqlParameter[] sqlParameter)
+        //{
+        //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+        //    {           
+        //        sqlConnection.Open();
+        //        using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+        //        {
+        //            sqlCommand.Parameters.AddRange(sqlParameter);
+        //            using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+        //            {
+        //                if (dataReader.HasRows)
+        //                {
+        //                    while (dataReader.Read())
+        //                    {
+        //                        var Reader= dataReader;
+        //                        return Reader;
+        //                    }
+        //                }
+        //                sqlConnection.Close();
+        //            }
+        //        }
+        //    }
+        //    return 0;
+        //}
     }
 }

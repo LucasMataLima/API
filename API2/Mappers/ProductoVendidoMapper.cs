@@ -12,15 +12,19 @@ namespace API2.Mappers
             {
                 while (dataReader.Read())
                 {
-                    var productoVendido = new ProductoVendido();
-                    productoVendido.Id = Convert.ToInt32(dataReader["Id"]);
-                    productoVendido.IdVenta = Convert.ToInt32(dataReader["IdVenta"]);
-                    productoVendido.Stock = Convert.ToInt32(dataReader["Stock"]);
-                    productoVendido.IdProducto = Convert.ToInt32(dataReader["IdProducto"]);;
-                    productosVendidos.Add(productoVendido);
+                    productosVendidos.Add(CargarProductoVendido(dataReader));
                 }
             }
             return productosVendidos;
+        }
+        public ProductoVendido CargarProductoVendido(SqlDataReader dataReader)
+        {
+            var productoVendido = new ProductoVendido();
+            productoVendido.Id = Convert.ToInt32(dataReader["Id"]);
+            productoVendido.IdVenta = Convert.ToInt32(dataReader["IdVenta"]);
+            productoVendido.Stock = Convert.ToInt32(dataReader["Stock"]);
+            productoVendido.IdProducto = Convert.ToInt32(dataReader["IdProducto"]);
+            return productoVendido;
         }
     }
 }
