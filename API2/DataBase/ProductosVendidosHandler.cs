@@ -11,7 +11,8 @@ namespace API2.DataBase
             List<ProductoVendidoyProducto> ListaProductoVendidoyProductos = new List<ProductoVendidoyProducto>();
 
 
-            var query = "SELECT * FROM Producto AS P " +
+            var query = "SELECT P.Id as 'PID', P.Descripciones, P.Costo, P.PrecioVenta, p.Stock AS 'StockProductos'," +
+                        "p.IdUsuario, PV.Id, Pv.Stock, Pv.IdProducto, Pv.IdVenta FROM Producto AS P " +
                         "INNER JOIN ProductoVendido AS PV on P.Id = PV.IdProducto " +
                         "WHERE P.IdUsuario = @IdUsuario";
 
@@ -29,11 +30,11 @@ namespace API2.DataBase
                             while (dataReader.Read())
                             {
                                 ProductoVendidoyProducto ProductoVendidoyProductos = new ProductoVendidoyProducto();
-                                ProductoVendidoyProductos.Producto.Id = Convert.ToInt32(dataReader["Id"]);
+                                ProductoVendidoyProductos.Producto.Id = Convert.ToInt32(dataReader["PID"]);
                                 ProductoVendidoyProductos.Producto.Descripciones = dataReader["Descripciones"].ToString();
                                 ProductoVendidoyProductos.Producto.Costo = Convert.ToDouble(dataReader["Costo"]);
                                 ProductoVendidoyProductos.Producto.PrecioVenta = Convert.ToDouble(dataReader["PrecioVenta"]);
-                                ProductoVendidoyProductos.Producto.Stock = Convert.ToInt32(dataReader["Stock"]);
+                                ProductoVendidoyProductos.Producto.Stock = Convert.ToInt32(dataReader["StockProductos"]);
                                 ProductoVendidoyProductos.Producto.IdUsuario = Convert.ToInt32(dataReader["IdUsuario"]);
                                 ProductoVendidoyProductos.ProductoVendido.Id = Convert.ToInt32(dataReader["ID"]);
                                 ProductoVendidoyProductos.ProductoVendido.Stock = Convert.ToInt32(dataReader["Stock"]);
@@ -47,7 +48,6 @@ namespace API2.DataBase
                 }
             }
             return ListaProductoVendidoyProductos;
-
         }
     }
 }

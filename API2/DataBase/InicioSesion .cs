@@ -5,7 +5,7 @@ namespace API2.DataBase
 {
     public class InicioSesion : DBHandler
     {
-        public Usuario Sesion(string NombreUsuario, string Contraseña)
+        public static Usuario Login(string NombreUsuario, string Contraseña)
         {
             var usuario = new Usuario();
             // el ConnectionString se encuientra en DBHandler

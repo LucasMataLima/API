@@ -22,6 +22,7 @@ namespace API2.DataBase
             bool result = false;
             string queryInsert = "INSERT INTO Venta (Comentarios, IdUsuario) " +
                                     "VALUES (@comentarios, @IdUsuario)";
+
             SqlParameter comentarios = new SqlParameter("Comentarios", System.Data.SqlDbType.VarChar) { Value = venta.Comentarios };
             SqlParameter IdUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.VarChar) { Value = venta.IdUsuario };
 
@@ -31,6 +32,7 @@ namespace API2.DataBase
             //Selecciono el último Id
             string query = "SELECT TOP (1) [Id] FROM [Venta] ORDER BY Id Desc";
             var idVentas = DBHandler.GetId(query);
+
             foreach (var prod in producto)
             {
                 // itero la lista de productos y cargo productos vendidos
@@ -44,8 +46,7 @@ namespace API2.DataBase
                 result = DBHandler.InsertUpdate(queryInsertProductoVendido, ParametrosProductosVendidos);
 
                 //Comienza el update de la Tabla Producto
-                string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock- @Stock) WHERE ID = @ID";
-
+                string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock - @Stock) WHERE ID = @ID";
 
                 SqlParameter StockaDescontar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock };
                 SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = prod.Id };
@@ -65,6 +66,7 @@ namespace API2.DataBase
             string querydeleteProductoVendido = "SELECT * FROM ProductoVendido WHERE IdVenta = @IdVenta";
             var sqlParamenter = new SqlParameter("IdVenta", SqlDbType.BigInt) { Value = venta.Id};
             var ListaProductosVendidos = Execute(querydeleteProductoVendido, sqlParamenter, PVMapper);
+
             //Itero la lista obtenida de Productos vendidos para restablecer el stock de la tabla Producto
             foreach (var productoVendido in ListaProductosVendidos)
             {
@@ -72,9 +74,11 @@ namespace API2.DataBase
                 string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock + @Stock) WHERE ID = @ID";
                 SqlParameter StockaSumar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = productoVendido.Stock };
                 SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = productoVendido.IdProducto};
+                
                 SqlParameter[] ParametrosProductosVendidos = new SqlParameter[] { StockaSumar, IdProductoCorresponde};
                 DBHandler.InsertUpdate(QueryProductos, ParametrosProductosVendidos);
             }
+
             //Elimino Producto Vendido
             string queryDeletePv = "DELETE FROM ProductoVendido WHERE IdVenta = @idVenta";
             var sqlParamenterPv = new SqlParameter("idVenta", SqlDbType.BigInt) { Value = venta.Id };
