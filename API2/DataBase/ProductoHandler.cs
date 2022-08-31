@@ -95,5 +95,28 @@ namespace API2.DataBase
             var P = DBHandler.InsertUpdate(queryUpdate, ProductosParammeters);
             return P;
         }
+
+
+        //public static Producto GetProducto()
+        //{
+        //    ProductoMapper productoMapper = new ProductoMapper();
+        //    Producto Productos = new Producto();
+        //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+        //    {
+        //        var query = "SELECT * FROM Producto";
+        //        using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+        //        {
+        //            var ProductosParammeters = new SqlParameter("Id", System.Data.SqlDbType.VarChar) { Value = 2 };
+        //            sqlConnection.Open();
+
+        //            using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+        //            {
+        //                Productos = DBHandler.Select(query, ProductosParammeters,  Productos);
+        //            }
+        //            sqlConnection.Close();
+        //        }
+        //    }
+        //    return Productos;
+        //}
     }
 }

@@ -2,7 +2,7 @@
 
 namespace API2.Mappers
 {
-    public class ProductoMapper : IMapper<Producto>
+    public class ProductoMapper : IMapper<Producto> //, IObj<Producto>
     {
         public List<Producto> Mapper(SqlDataReader dataReader) 
         {
@@ -28,5 +28,10 @@ namespace API2.Mappers
             producto.IdUsuario = Convert.ToInt32(dataReader["IdUsuario"]);
             return producto;
         }
+
+        //public Producto Select(SqlDataReader dataReader)
+        //{
+        //    return CargarProducto(dataReader);
+        //}
     }
 }

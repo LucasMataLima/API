@@ -95,29 +95,29 @@ namespace API2.DataBase
             }               
         }
 
-        //public static SqlDataReader Select(string query, SqlParameter[] sqlParameter)
+        //public static T Select <T>(string query, SqlParameter sqlParameter, IObj<T> Obj)
         //{
+        //    var Reader = Obj;
         //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-        //    {           
+        //    {
         //        sqlConnection.Open();
         //        using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
         //        {
-        //            sqlCommand.Parameters.AddRange(sqlParameter);
+        //            sqlCommand.Parameters.Add(sqlParameter);
         //            using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
         //            {
         //                if (dataReader.HasRows)
         //                {
         //                    while (dataReader.Read())
         //                    {
-        //                        var Reader= dataReader;
-        //                        return Reader;
+        //                        var Reader = Obj.Select(dataReader);
         //                    }
         //                }
         //                sqlConnection.Close();
         //            }
         //        }
         //    }
-        //    return 0;
+        //    return Reader;
         //}
     }
 }
