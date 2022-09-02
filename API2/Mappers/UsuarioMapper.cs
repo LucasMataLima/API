@@ -16,7 +16,6 @@ namespace API2.Mappers
             }
             return usuarios;
         }
-
         public Usuario CargarObj(SqlDataReader dataReader)
         {
             var usuario = new Usuario();

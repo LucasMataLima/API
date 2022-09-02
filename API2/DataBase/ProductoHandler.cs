@@ -8,111 +8,53 @@ namespace API2.DataBase
     {
         public static List<Producto> GetProductos()
         {
-            ProductoMapper productoMapper = new ProductoMapper();
-            List<Producto> ListaProductos = new List<Producto>();
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-            {
-                var query = "SELECT * FROM Producto";
-                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
-                {
-                    sqlConnection.Open();
-
-                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
-                    {
-                        ListaProductos = productoMapper.Mapper(dataReader);
-                    }
-                    sqlConnection.Close();
-                }
-            }
-            return ListaProductos;
+            var productoMapper = new ProductoMapper();
+            var query = "SELECT * FROM Producto";
+            var P = DBHandler.Execute(query, productoMapper);
+            return P;
         }
-        //public List<Producto> GetProductos(int IdUsuario = 0)
-        //{
-        //    var productoMapper = new ProductoMapper();   
-        //    var query = "SELECT * FROM Producto WHERE IdUsuario = @IdUsuario";
-        //    var sqlParamenter = new SqlParameter("IdUsuario", SqlDbType.BigInt) { Value = IdUsuario };
-        //    var P = DBHandler.Execute(query, sqlParamenter, productoMapper);
-        //    return P;
-        //}
         public static bool DeleteProduct(int Id)
         {
-            bool result = false;
-
             //--Prodicto Vendido ---
-            string queryDelete = "DELETE ProductoVendido FROM Producto AS P INNER JOIN ProductoVendido AS PV on P.ID = PV.IDPRODUCTO WHERE P.ID = @id";
+            var queryDelete = "DELETE ProductoVendido FROM Producto AS P INNER JOIN ProductoVendido AS PV on P.ID = PV.IDPRODUCTO WHERE P.ID = @id";
             var sqlParamenter = new SqlParameter("id", SqlDbType.BigInt) { Value = Id };
-            result = DBHandler.Delete(queryDelete, sqlParamenter);
+            var result = DBHandler.Delete(queryDelete, sqlParamenter);
             if (result)
             {
                 //--- Producto ---- 
-                string queryDelete2 = "DELETE FROM Producto WHERE Id = @id";
+                var queryDelete2 = "DELETE FROM Producto WHERE Id = @id";
                 var sqlParamenter2 = new SqlParameter("id", SqlDbType.BigInt) { Value = Id };
                 result = DBHandler.Delete(queryDelete2, sqlParamenter2);
             }
-
             return result;
         }
         public static bool InsertProducto(Producto producto)
         {
-            string queryInsert = "INSERT INTO Producto (Descripciones, Costo, PrecioVenta, Stock, IdUsuario) " +
-                    "VALUES (@descripciones, @costo, @precioVenta, @stock, @idUsuario)";
-
+            var queryInsert = "INSERT INTO Producto (Descripciones, Costo, PrecioVenta, Stock, IdUsuario) " +
+                              "VALUES (@descripciones, @costo, @precioVenta, @stock, @idUsuario)";
             var descripciones = new SqlParameter("Descripciones", System.Data.SqlDbType.VarChar) { Value = producto.Descripciones };
             var costo = new SqlParameter("Costo", System.Data.SqlDbType.Decimal) { Value = producto.Costo };
             var precioVenta = new SqlParameter("PrecioVenta", System.Data.SqlDbType.Decimal) { Value = producto.PrecioVenta };
             var stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
             var idUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
-            SqlParameter[] ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario };
-
+            var ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario };
             var result = DBHandler.InsertUpdate(queryInsert, ProductosParammeters);
-
             return result;
         }
         public static bool UpdateProducto(Producto producto)
         {
-            string queryUpdate = "UPDATE [SistemaGestion].[dbo].[Producto]" +
+            var queryUpdate = "UPDATE [SistemaGestion].[dbo].[Producto]" +
                                  "SET Descripciones = @descripciones, Costo = @costo, PrecioVenta = @precioVenta, Stock = @stock, IdUsuario = @idUsuario " +
                                  "WHERE Id = @id ";
-
-            //List<SqlParameter> productos = new List<SqlParameter>();
             var descripciones = new SqlParameter("descripciones", System.Data.SqlDbType.VarChar) { Value = producto.Descripciones };
             var costo = new SqlParameter("costo", System.Data.SqlDbType.Decimal) { Value = producto.Costo };
             var precioVenta = new SqlParameter("precioVenta", System.Data.SqlDbType.Decimal) { Value = producto.PrecioVenta };
             var stock = new SqlParameter("stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
             var idUsuario = new SqlParameter("idUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
             var id = new SqlParameter("id", System.Data.SqlDbType.BigInt) { Value = producto.Id };
-            SqlParameter[] ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario,id };
-            //productos.Add(descripciones);
-            //productos.Add(costo);
-            //productos.Add(precioVenta);
-            //productos.Add(stock);
-            //productos.Add(idUsuario);
-            //productos.Add(id);
+            var ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario,id };
             var P = DBHandler.InsertUpdate(queryUpdate, ProductosParammeters);
             return P;
         }
-
-
-        //public static Producto GetProducto()
-        //{
-        //    ProductoMapper productoMapper = new ProductoMapper();
-        //    Producto Productos = new Producto();
-        //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-        //    {
-        //        var query = "SELECT * FROM Producto";
-        //        using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
-        //        {
-        //            var ProductosParammeters = new SqlParameter("Id", System.Data.SqlDbType.VarChar) { Value = 2 };
-        //            sqlConnection.Open();
-
-        //            using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
-        //            {
-        //                Productos = DBHandler.Select(query, ProductosParammeters,  Productos);
-        //            }
-        //            sqlConnection.Close();
-        //        }
-        //    }
-        //    return Productos;
-        //}
     }
 }

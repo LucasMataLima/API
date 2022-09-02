@@ -5,16 +5,18 @@ namespace API2.DataBase
 {
     public class DBHandler
     {
-        public const string ConnectionString = "Data Source=NKO\\SQLEXPRESS;Initial Catalog=SistemaGestion; Integrated Security=True;";
-
-        public static List<T> Execute<T>(string query, SqlParameter sqlParameter, IMapper<T> Obj)
+        public const string ConnectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=SistemaGestion; Integrated Security=True;";
+        public static List<T> Execute<T>(string query, IMapper<T> Obj, SqlParameter[] sqlParameter = null)
         {
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                 {
                     sqlConnection.Open();
-                    sqlCommand.Parameters.Add(sqlParameter);
+                    if (sqlParameter != null)
+                    {
+                        sqlCommand.Parameters.AddRange(sqlParameter);
+                    }
                     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                     {
                         var Exe = Obj.Mapper(dataReader);
@@ -25,7 +27,6 @@ namespace API2.DataBase
 
             }
         }
-
         public static bool Delete(string queryDelete, SqlParameter sqlParameter)
         {
             var result = false;
@@ -52,7 +53,6 @@ namespace API2.DataBase
             }
             return result;
         }
-
         public static bool InsertUpdate(string queryInsert, SqlParameter[] sqlParameter)
         {
             bool result = false;
@@ -79,7 +79,6 @@ namespace API2.DataBase
             }
             return result;
         }
-
         public static int GetId(string query)
         {
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
@@ -103,31 +102,27 @@ namespace API2.DataBase
                 }
             }               
         }
-
-        //public static T Select<T>(string query, SqlParameter[] sqlParameter, IObj<T> Obj)
-        //{
-        //    var Reader;
-        //    //var Reader = (T)Convert.ChangeType(Obj, typeof(T));
-        //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-        //    {
-        //        sqlConnection.Open();
-        //        using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
-        //        {
-        //            sqlCommand.Parameters.AddRange(sqlParameter);
-        //            using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
-        //            {
-        //                if (dataReader.HasRows)
-        //                {
-        //                    while (dataReader.Read())
-        //                    {
-        //                        Reader = Obj.CargarObj(dataReader);
-        //                    }
-        //                }
-        //                sqlConnection.Close();
-        //            }
-        //        }
-        //    }
-        //    return Reader;
-        //}
+        public static void Select<T>(string query, SqlParameter[] sqlParameter, IObj<T> Obj, ref T result)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.Parameters.AddRange(sqlParameter);
+                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+                    {
+                        if (dataReader.HasRows)
+                        {
+                            while (dataReader.Read())
+                            {
+                                result = Obj.CargarObj(dataReader);
+                            }
+                        }
+                        sqlConnection.Close();
+                    }
+                }
+            }
+        }
     }
 }

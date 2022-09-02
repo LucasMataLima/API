@@ -3,21 +3,21 @@ using System.Runtime.InteropServices;
 
 namespace API2.Mappers
 {
-    public class ProductoVendidoMapper : IMapper<ProductoVendido>
+    public class ProductoVendidoMapper : IMapper<ProductoVendido>, IObj<ProductoVendido>
     {
         public List<ProductoVendido> Mapper(SqlDataReader dataReader)
         {
-            List<ProductoVendido> productosVendidos = new List<ProductoVendido>();
+            var productosVendidos = new List<ProductoVendido>();
             if (dataReader.HasRows)
             {
                 while (dataReader.Read())
                 {
-                    productosVendidos.Add(CargarProductoVendido(dataReader));
+                    productosVendidos.Add(CargarObj(dataReader));
                 }
             }
             return productosVendidos;
         }
-        public ProductoVendido CargarProductoVendido(SqlDataReader dataReader)
+        public ProductoVendido CargarObj(SqlDataReader dataReader)
         {
             var productoVendido = new ProductoVendido();
             productoVendido.Id = Convert.ToInt32(dataReader["Id"]);

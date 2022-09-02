@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace API2.Mappers
 {
-    public class VentasMapper : IMapper<Venta> 
+    public class VentasMapper : IMapper<Venta> , IObj<Venta>
     {
         public List<Venta>Mapper(SqlDataReader dataReader)
         {
@@ -13,12 +13,12 @@ namespace API2.Mappers
             {
                 while (dataReader.Read())
                 {
-                    ventas.Add(CargarVenta(dataReader));
+                    ventas.Add(CargarObj(dataReader));
                 }
             }
             return ventas;
         }
-        public Venta CargarVenta(SqlDataReader dataReader)
+        public Venta CargarObj(SqlDataReader dataReader)
         {
             var venta = new Venta();
             venta.Id = Convert.ToInt32(dataReader["Id"]);
