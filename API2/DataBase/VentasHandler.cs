@@ -60,7 +60,7 @@ namespace API2.DataBase
             var sqlParamenter = new SqlParameter("IdVenta", SqlDbType.BigInt) { Value = venta.Id};
             var ventaSqlParameter = new SqlParameter[] { sqlParamenter };
             var ListaProductosVendidos = Execute(querydeleteProductoVendido, PVMapper, ventaSqlParameter);
-            if (ListaProductosVendidos.Count > 0)
+            if (ListaProductosVendidos.Any())
             {
                 //Itero la lista obtenida de Productos vendidos para restablecer el stock de la tabla Producto
                 foreach (var productoVendido in ListaProductosVendidos)
