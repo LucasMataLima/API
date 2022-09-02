@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace API2.DataBase
 {
-    public class UsuarioHandler : DBHandler
+    public class UsuarioHandler : DBHandler 
     {
         public static Usuario GetUsuario(string NombreUsuario)
         {
@@ -15,6 +15,7 @@ namespace API2.DataBase
             var query = "SELECT * FROM Usuario WHERE NombreUsuario = @NombreUsuario";
             var nombreUsuario = new SqlParameter("NombreUsuario", System.Data.SqlDbType.VarChar) { Value = NombreUsuario };
             SqlParameter[] sqlParameter = new SqlParameter[] {nombreUsuario};
+            //usuario = DBHandler.Select(query, sqlParameter, usuarioMapper);
 
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
@@ -28,7 +29,7 @@ namespace API2.DataBase
                         {
                             while (dataReader.Read())
                             {
-                                usuario = usuarioMapper.CargarUsuario(dataReader);
+                                usuario = usuarioMapper.CargarObj(dataReader);
                             }
                         }
                         sqlConnection.Close();
@@ -47,7 +48,8 @@ namespace API2.DataBase
         public static bool InsertUser(Usuario usuario)
         {
             bool U;
-            if (GetUsuario(usuario.NombreUsuario) == null)
+            var ExisteUsuario = GetUsuario(usuario.NombreUsuario);
+            if (ExisteUsuario.Id == 0)
             { 
                 string queryInsert = "INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) " +
                                      "VALUES (@nombre, @apellido, @nombreUsuario, @contraseña, @mail)";
@@ -79,17 +81,10 @@ namespace API2.DataBase
             var contraseña = new SqlParameter("contraseña", System.Data.SqlDbType.VarChar) { Value = usuario.Contraseña };
             var mail = new SqlParameter("mail", System.Data.SqlDbType.VarChar) { Value = usuario.Mail };
             var id = new SqlParameter("id", System.Data.SqlDbType.BigInt) { Value = usuario.Id };
-            //List<SqlParameter> ParametrosUs = new List<SqlParameter>();
-            //ParametrosUs.Add(nombre);
-            //ParametrosUs.Add(apellido);
-            //ParametrosUs.Add(nombreUsuario);
-            //ParametrosUs.Add(contraseña);
-            //ParametrosUs.Add(mail);
-            //ParametrosUs.Add(id);
             SqlParameter[] ParametrosUs = new SqlParameter[] { nombre, apellido, nombreUsuario, contraseña, mail, id };
 
-            var U = DBHandler.InsertUpdate(queryUpdate, ParametrosUs);
-            return U;
+            var User = DBHandler.InsertUpdate(queryUpdate, ParametrosUs);
+            return User;
         }
     }
 }

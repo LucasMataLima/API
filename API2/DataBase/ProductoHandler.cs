@@ -42,11 +42,13 @@ namespace API2.DataBase
             string queryDelete = "DELETE ProductoVendido FROM Producto AS P INNER JOIN ProductoVendido AS PV on P.ID = PV.IDPRODUCTO WHERE P.ID = @id";
             var sqlParamenter = new SqlParameter("id", SqlDbType.BigInt) { Value = Id };
             result = DBHandler.Delete(queryDelete, sqlParamenter);
-
-            //--- Producto ---- 
-            string queryDelete2 = "DELETE FROM Producto WHERE Id = @id";
-            var sqlParamenter2 = new SqlParameter("id", SqlDbType.BigInt) { Value = Id };
-            result = DBHandler.Delete(queryDelete2, sqlParamenter2);
+            if (result)
+            {
+                //--- Producto ---- 
+                string queryDelete2 = "DELETE FROM Producto WHERE Id = @id";
+                var sqlParamenter2 = new SqlParameter("id", SqlDbType.BigInt) { Value = Id };
+                result = DBHandler.Delete(queryDelete2, sqlParamenter2);
+            }
 
             return result;
         }
@@ -61,12 +63,6 @@ namespace API2.DataBase
             var stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
             var idUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
             SqlParameter[] ProductosParammeters = new SqlParameter[] { descripciones, costo, precioVenta, stock, idUsuario };
-            //List<SqlParameter> productos = new List<SqlParameter>();
-            //productos.Add(descripciones);
-            //productos.Add(costo);
-            //productos.Add(precioVenta);         
-            //productos.Add(stock);
-            //productos.Add(idUsuario);
 
             var result = DBHandler.InsertUpdate(queryInsert, ProductosParammeters);
 

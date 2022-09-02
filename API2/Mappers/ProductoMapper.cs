@@ -2,7 +2,7 @@
 
 namespace API2.Mappers
 {
-    public class ProductoMapper : IMapper<Producto> //, IObj<Producto>
+    public class ProductoMapper : IMapper<Producto> 
     {
         public List<Producto> Mapper(SqlDataReader dataReader) 
         {

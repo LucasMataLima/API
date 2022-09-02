@@ -35,10 +35,17 @@ namespace API2.DataBase
                 using (SqlCommand sqlCommand = new SqlCommand(queryDelete, sqlConnection))
                 {
                     sqlCommand.Parameters.Add(sqlParameter);
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
+                    try
                     {
-                        result = true;
+                        int numberOfRows = sqlCommand.ExecuteNonQuery();
+                        if (numberOfRows > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        result = false;
                     }
                 }
                 sqlConnection.Close();
@@ -54,16 +61,18 @@ namespace API2.DataBase
                 sqlConnection.Open();
                 using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
                 {
-                    //foreach (var item in sqlParameter)
-                    //{
                     sqlCommand.Parameters.AddRange(sqlParameter);
-
-                    //}
-
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
+                    try
                     {
-                        result = true;
+                        int numberOfRows = sqlCommand.ExecuteNonQuery();
+                        if (numberOfRows > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        result = false;
                     }
                 }
                 sqlConnection.Close();
@@ -95,22 +104,23 @@ namespace API2.DataBase
             }               
         }
 
-        //public static T Select <T>(string query, SqlParameter sqlParameter, IObj<T> Obj)
+        //public static T Select<T>(string query, SqlParameter[] sqlParameter, IObj<T> Obj)
         //{
-        //    var Reader = Obj;
+        //    var Reader;
+        //    //var Reader = (T)Convert.ChangeType(Obj, typeof(T));
         //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
         //    {
         //        sqlConnection.Open();
         //        using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
         //        {
-        //            sqlCommand.Parameters.Add(sqlParameter);
+        //            sqlCommand.Parameters.AddRange(sqlParameter);
         //            using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
         //            {
         //                if (dataReader.HasRows)
         //                {
         //                    while (dataReader.Read())
         //                    {
-        //                        var Reader = Obj.Select(dataReader);
+        //                        Reader = Obj.CargarObj(dataReader);
         //                    }
         //                }
         //                sqlConnection.Close();

@@ -2,7 +2,7 @@
 
 namespace API2.Mappers
 {
-    public class UsuarioMapper :IMapper<Usuario>
+    public class UsuarioMapper :IMapper<Usuario>, IObj<Usuario>  
     {
         public List<Usuario> Mapper(SqlDataReader dataReader)
         {
@@ -11,13 +11,13 @@ namespace API2.Mappers
             {
                 while (dataReader.Read())
                 {
-                    usuarios.Add(CargarUsuario(dataReader));
+                    usuarios.Add(CargarObj(dataReader));
                 }
             }
             return usuarios;
         }
 
-        public Usuario CargarUsuario(SqlDataReader dataReader)
+        public Usuario CargarObj(SqlDataReader dataReader)
         {
             var usuario = new Usuario();
             usuario.Id = Convert.ToInt32(dataReader["ID"]);

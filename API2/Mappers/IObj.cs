@@ -4,6 +4,6 @@ namespace API2.Mappers
 {
     public interface IObj <T>
     {
-        T Select(SqlDataReader dataReader);
+        T CargarObj(SqlDataReader dataReader);
     }
 }
